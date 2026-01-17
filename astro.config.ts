@@ -23,7 +23,10 @@ export default defineConfig({
 				replacesTitle: true,
 			},
 			social: {
-				gitlab: 'https://gitlab.com/futrou/zuby.js/'
+				github: 'https://github.com/futrou/zubyjs-docs/'
+			},
+			editLink: {
+				baseUrl: 'https://github.com/futrou/zubyjs-docs/edit/master/',
 			},
 			sidebar: [
 				{
