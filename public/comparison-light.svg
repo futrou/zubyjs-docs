@@ -1,0 +1,50 @@
+<svg width="800" height="125" xmlns="http://www.w3.org/2000/svg" version="1.1" aria-hidden="false" aria-label="Interactive chart">
+ <defs>
+  <linearGradient id="gradient">
+   <stop stop-color="#f9b248" offset="0%"/>
+   <stop stop-color="#f4863c" offset="100%"/>
+  </linearGradient>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <g data-z-index="3" aria-hidden="false" id="svg_2">
+   <g data-z-index="0.1" transform="rotate(90, -472.5, 3404) translate(640, 364) scale(-1, 1) scale(1)" clip-path="url(#highcharts-1einrfw-219-)" aria-hidden="false" width="630" height="317" role="region" tabindex="-1" aria-label="Item 1, bar series 1 of 3 with 1 bar." id="svg_3">
+    <rect x="203" y="585" width="39" height="46" fill="#6f58e9" tabindex="-1" role="img" aria-label="x, 0, 943. Item 1." id="svg_4"/>
+   </g>
+   <g data-z-index="0.1" transform="rotate(90, 640, 364) translate(640, 364) scale(-1, 1) scale(1)" clip-path="none" aria-hidden="true" id="svg_5"/>
+   <g data-z-index="0.1" transform="rotate(90, -152.5, 3311.5) translate(640, 364) scale(-1, 1) scale(1)" clip-path="url(#highcharts-1einrfw-219-)" aria-hidden="false" role="region" tabindex="-1" aria-label="Item 2, bar series 2 of 3 with 1 bar." width="630" height="317" id="svg_6">
+    <rect x="139" y="548" width="39" height="83" fill="#94d13d" tabindex="-1" role="img" aria-label="x, 0, 1,709. Item 2." id="svg_7"/>
+   </g>
+   <g data-z-index="0.1" transform="rotate(90, 640, 364) translate(640, 364) scale(-1, 1) scale(1)" clip-path="none" aria-hidden="true" id="svg_8"/>
+   <g data-z-index="0.1" transform="rotate(90, 162.5, 2096.5) translate(640, 364) scale(-1, 1) scale(1)" clip-path="url(#highcharts-1einrfw-219-)" aria-hidden="false" role="region" tabindex="-1" aria-label="Item 3, bar series 3 of 3 with 1 bar." width="630" height="317" id="svg_9">
+    <rect x="76" y="62" width="39" height="569" fill="rgb(0,0,0)" tabindex="-1" role="img" aria-label="x, 0, 11,745. Item 3." id="svg_10"/>
+   </g>
+   <g data-z-index="0.1" transform="rotate(90, 640, 364) translate(640, 364) scale(-1, 1) scale(1)" clip-path="none" aria-hidden="true" id="svg_11"/>
+  </g>
+  <g data-z-index="6" aria-hidden="true" id="svg_13">
+   <g data-z-index="1" id="svg_14">
+    <text font-family="sans-serif" x="218" data-z-index="1" y="21" font-size="13px" font-weight=" bold" fill="rgba(0,0,0,0.85)" id="svg_15">0.9s</text>
+   </g>
+  </g>
+  <g data-z-index="6" aria-hidden="true" id="svg_16">
+   <g data-z-index="1" id="svg_17">
+    <text font-family="sans-serif" x="250" data-z-index="1" y="61" font-size="13px" font-weight=" bold" fill="rgba(0,0,0,0.85)" id="svg_18">1.7s</text>
+   </g>
+  </g>
+  <g data-z-index="6" transform="translate(10, 47) scale(1)" aria-hidden="true" id="svg_19">
+   <g data-z-index="1" id="svg_20">
+    <text font-family="sans-serif" x="722" data-z-index="1" y="53" font-size="13px" font-weight=" bold" fill="rgba(0,0,0,0.85)" id="svg_21">11.8s</text>
+   </g>
+  </g>
+  <g data-z-index="7" aria-hidden="true" id="svg_22">
+   <text font-family="sans-serif" x="120" text-anchor="end" y="218" font-size=" 11px" fill=" rgb(102, 102, 102)" id="svg_23"/>
+  </g>
+  <g data-z-index="7" aria-hidden="true" id="svg_24"/>
+  <rect fill="url('#gradient')" x="159" y="3.39999" width="49" height="29" id="svg_39" stroke-width="0" rx="5"/>
+  <rect fill="url('#gradient')" x="159" y="42.39999" width="81" height="29" id="svg_41" stroke-width="0" rx="5"/>
+  <rect fill="url('#gradient')" x="160" y="81.39999" width="563.00003" height="29" id="svg_42" stroke-width="0" rx="5"/>
+  <text x="1" y="23.79999" id="svg_87" stroke-width="0" font-size=" 16px" font-family="sans-serif" text-anchor="start" xml:space="preserve">Zuby.js + Preact</text>
+  <text x="1" y="62.79999" id="svg_85" stroke-width="0" font-size=" 16px" font-family="sans-serif" text-anchor="start" xml:space="preserve">Zuby.js + React</text>
+  <text x="1" y="101.79999" id="svg_86" stroke-width="0" font-size=" 16px" font-family="sans-serif" text-anchor="start" xml:space="preserve">Next.js 14.1.0</text>
+ </g>
+</svg>

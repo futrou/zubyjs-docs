@@ -1,0 +1,132 @@
+---
+title: Pre-rendering
+description: Learn how to pre-render your Zuby.js app
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Zuby.js will try to pre-render pages based on configured output mode.
+- In the `static` output mode, all pages with static route will be pre-rendered by default.
+- In the `server` output mode, only pages with `prerender` property set to `true` will be pre-rendered.
+
+## Page level pre-rendering
+You can also enable/disable the pre-rendering for the specific page by exporting the `prerender` property with `true/false` value.
+Example:
+<Tabs>
+    <TabItem label="Javascript">
+    ```jsx title="pages/index.jsx"
+    export const prerender = true;
+    export default function Index() {
+        return (
+            <div>
+                <h1>Hello world!</h1>
+            </div>
+        );
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```tsx title="pages/index.tsx"
+    import type { Prerender } from 'zuby';
+
+    export const prerender: Prerender = true;
+    export default function Index() {
+        return (
+            <div>
+                <h1>Hello world!</h1>
+            </div>
+        );
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+It can be also defined as a function that returns a boolean value.
+<Tabs>
+    <TabItem label="Javascript">
+    ```jsx title="pages/index.jsx"
+    export const prerender = async () => true;
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```tsx title="pages/index.tsx"
+    import type { Prerender } from 'zuby';
+
+    export const prerender: Prerender = async () => true;
+    ```
+    </TabItem>
+</Tabs>
+
+Dynamic routes can be pre-rendered as well,
+however you need to export the `prerenderPaths` property with an array of dynamic params that should be used to construct the paths
+or the full path itself that should be pre-rendered. This pattern is very similar to the `getStaticPaths` function of Next.js or Astro.
+<Tabs>
+    <TabItem label="Javascript">
+    ```jsx title="pages/users/[id].jsx"
+    export const prerender = true;
+    export const prerenderPaths = [
+        {
+            id: 1
+        },
+        {
+            id: 2
+        },
+        '/users/3'
+    ];
+    export default function User({ context }) {
+        const { id } = context.params;
+        return (
+            <div>
+                <h1>User {id}</h1>
+            </div>
+        );
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```tsx title="pages/users/[id].tsx"
+    import type { Prerender, PrerenderPaths, PageContext } from 'zuby';
+
+    export const prerender: Prerender = true;
+    export const prerenderPaths: PrerenderPaths = [
+        {
+            id: 1
+        },
+        {
+            id: 2
+        },
+        '/users/3'
+    ];
+    export default function User({ context }: { context: PageContext }) {
+        const { id } = context.params;
+        return (
+            <div>
+                <h1>User {id}</h1>
+            </div>
+        );
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+## Global pre-rendering
+Zuby.js also allows you to define all paths that should be pre-rendered in the `zuby.config.mjs` file
+by using the `prerenderPaths` property.
+These paths don't need to be pages but can be also API endpoints or any other response returned by the handler.
+They can be also generated dynamically based on the data from the API.
+```js title="zuby.config.mjs"
+import { defineConfig } from 'zuby';
+import preact from '@zubyjs/preact';
+
+export default defineConfig({
+    outDir: 'build',
+    jsx: preact(),
+    prerenderPaths: [
+        '/about',
+        '/users/1',
+        '/users/2',
+        '/users/3',
+    ]
+});
+```
+
+See the [config options](/reference/configuration#prerenderpaths) section for more details.

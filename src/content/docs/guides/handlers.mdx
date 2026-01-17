@@ -1,0 +1,350 @@
+---
+title: Handlers
+description: Learn about handlers and how to use them in your Zuby.js app
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Handlers are universal functions,
+that runs only on the server and can serve as API endpoints,
+middlewares, props for pages or completely replace the page rendering.
+
+Handlers are defined in the `./pages` directory
+and have the `.js` or `.ts` extension.
+
+Each handler needs to export a default function,
+that receives the `context` ZubyPageContext as a first argument
+and optionally the `next` function as a second argument.
+
+The `context` ZubyPageContext object contains all the information about the current request,
+matched routes params, page props and more.
+The context is shared between all handlers and the page component
+and can be used to pass data between them and props to pages.
+
+Handlers can be also async functions that return a promise
+and can be used to fetch data from the database or external API.
+Zuby.js will wait for the promise to resolve before the page is rendered.
+
+Generic handler for any HTTP method can be defined as default exported function:
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default function all(_context) {
+        return new Response('Hello world from handler!');
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function all(_context: PageContext) {
+        return new Response('Hello world from handler!');
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+Handlers can be also defined for specific HTTP methods.
+These handlers need to be exported as named functions and function name needs to match the HTTP method name in lowercase.
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    // Runs only for GET HTTP method
+    export function get(_context) {
+        return new Response('Hello world from GET Handler!');
+    }
+
+    // Runs only for POST HTTP method
+    export function post(_context) {
+        return new Response('Hello world from POST Handler!');
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    // Runs only for GET HTTP method
+    export function get(_context: PageContext) {
+        return new Response('Hello world from GET Handler!');
+    }
+
+    // Runs only for POST HTTP method
+    export function post(_context: PageContext) {
+        return new Response('Hello world from POST Handler!');
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+These two approaches can be mixed together in the same file.
+When request comes, Zuby.js will try to find the handler for the specific HTTP method.
+If no such a handler is found, the generic handler will be executed instead.
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    // Runs only for all HTTP methods except POST
+    export default function all(_context) {
+        return new Response('Hello world from ALL Handler!');
+    }
+
+    // Runs only for POST HTTP method
+    export function post(_context) {
+        return new Response('Hello world from POST Handler!');
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    // Runs only for all HTTP methods except POST
+    export default function all(_context: PageContext) {
+        return new Response('Hello world from ALL Handler!');
+    }
+
+    // Runs only for POST HTTP method
+    export function post(_context: PageContext) {
+        return new Response('Hello world from POST Handler!');
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+
+Let's take a look at following examples.
+
+## Handler as API endpoint
+Every handler can return a response object
+that will be sent to the client as a response to the request
+and will stop the execution of the next handlers in the chain
+as well as the page rendering.
+
+Example of a simple handler that will return a JSON response:
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default function Handler(context) {
+        return new Response(JSON.stringify({ id: context.params.id }), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function Handler(context: PageContext) {
+        return new Response(JSON.stringify({ id: context.params.id }), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+If the handler returns just object,
+Zuby.js will automatically serialize it and send it to the client as JSON response
+with correct content type header.
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default function Handler(context) {
+        return {
+            id: context.params.id,
+            date: new Date()
+        }
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function Handler(context: PageContext) {
+        return {
+            id: context.params.id,
+            date: new Date()
+        }
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+## Handler as separate page
+If the handler returns just a string, 
+Zuby.js will automatically convert it and send it to the client as HTML response
+with correct content type header.
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default function Handler(context) {
+        return '<h1>Hello world!</h1>';
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function Handler(_context: PageContext) {
+        return '<h1>Hello world!</h1>';
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+
+## Handler as middleware
+The `next` function can be used to execute the next handler in the chain
+and allows handler to act as a middleware.
+
+Example of a simple handler that will log a message before the next handler is executed:
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default function Handler(context, next) {
+        console.log('First handler');
+        return next();
+    }
+    ```
+    ```js title="pages/[id].js"
+    export default function Handler(context, next) {
+        console.log('Second handler');
+        return next();
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function Handler(_context: PageContext, next: () => void | Promise<void>) {
+        console.log('First handler');
+        return next();
+    }
+    ```
+    ```ts title="pages/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function Handler(_context: PageContext, next: () => void | Promise<void>) {
+        console.log('Second handler');
+        return next();
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+## Handler as auth middleware
+The handlers can be used to implement security middlewares
+that will run before the page is rendered and can be used to check if the user is authenticated.
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default async function Handler(context, next) {
+        const bearerToken = context.request.headers.get('Authorization');
+        const authorized = await checkToken(bearerToken);
+        if (!authorized) {
+            return new Response('Unauthorized', { status: 401 });
+        }
+        return next();
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default async function Handler(context: PageContext, next: () => void | Promise<void>) {
+        const bearerToken = context.request.headers.get('Authorization');
+        const authorized = await checkToken(bearerToken);
+        if (!authorized) {
+            return new Response('Unauthorized', { status: 401 });
+        }
+        return next();
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+## Handler for dynamic redirects
+The handlers can be used to implement complex redirects.
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default function Handler(context, next) {
+        return new Response(null, {
+            status: 302,
+            headers: {
+                Location: `/users/${context.params.id}/profile?${context.request.url.searchParams.toString()`
+            }
+        });
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function Handler(context: PageContext, _next: () => void | Promise<void>) {
+        return new Response(null, {
+            status: 302,
+            headers: {
+                Location: `/users/${context.params.id}/profile?${context.request.url.searchParams.toString()`
+            }
+        });
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+
+## Handler as page props
+The `context` ZubyPageContext object can be used to pass props to the page component.
+The following handler servers as a page props provider.
+
+This design pattern is alternative to the `getServerSideProps` and `getStaticProps` functions
+from Next.js and allows to define the props for both pre-rendered and not pre-rendered pages in Zuby.js.
+
+Example of a simple handler that will pass the props to the page component:
+<Tabs>
+    <TabItem label="Javascript">
+    ```js title="pages/users/[id].js"
+    export default function Handler(context, next) {
+        context.props = {
+          title: 'About us',
+          description: 'Learn more about us'
+        };
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```ts title="pages/users/[id].ts"
+    import type { PageContext } from 'zuby';
+
+    export default function Handler(context: PageContext, _next: () => void | Promise<void>) {
+        context.props = {
+          title: 'About us',
+          description: 'Learn more about us'
+        };
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+## Execution order
+Zuby.js will always try to find the handler for the current route
+and execute it before the page is rendered. Only one handler can run by default,
+unless you use the `next` function to execute the next handler in the chain.
+
+The handlers are executed from the most to least specific. \
+Example:
+- `/users/123.js` - Runs first
+- `/users/[id].js` - Runs second if it's called by the `next()` function
+- `/[...path].js` - Runs third if it's called by the `next()` function
+

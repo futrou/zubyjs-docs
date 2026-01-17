@@ -1,0 +1,32 @@
+---
+title: Internationalization (i18n)
+description: Learn how to use internationalization in Zuby.js
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The Zuby.js framework is built with internationalization in mind and it's support in both `static` and `server` output modes.
+It is very easy to add support for multiple languages to your application using the `i18n` configuration option.
+
+## Configuration
+Here's an example of a configuration file with internationalization enabled:
+```js title="zuby.config.mjs"
+import { defineConfig } from 'zuby';
+import preact from '@zubyjs/preact';
+
+export default defineConfig({
+    outDir: 'build',
+    jsx: preact(),
+    i18n: {
+        locales: ['en', 'de', 'cs', 'pl'],
+        defaultLocale: 'en',
+    }
+});
+```
+
+With this configuration, Zuby.js will generate a separate page output for each locale.
+The default locale is available at the root path `/` and other locales are available at `/de`, `/cs`, `/pl`.
+
+## Usage
+To use internationalization in your application, you can use the [PageContext](/reference/page-context) object
+and it's properties `locale` and `locales` to get the current locale and all available locales respectively.
+To localize the path of a link, you can use the `localizePath` function.

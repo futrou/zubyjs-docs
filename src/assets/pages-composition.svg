@@ -1,0 +1,20 @@
+<svg width="700" height="370" xmlns="http://www.w3.org/2000/svg" version="1.0" preserveAspectRatio="xMidYMid meet">
+ <metadata>Created by potrace 1.15, written by Peter Selinger 2001-2017</metadata>
+
+ <g>
+  <title>Layer 1</title>
+  <rect id="svg_1" height="362.00001" width="696.00002" y="3.40001" x="2.40002" stroke="#000" fill="#fff"/>
+  <rect id="svg_2" height="297.99999" width="641.00002" y="34.40002" x="27.4" stroke="#000" fill="#fff"/>
+  <rect id="svg_3" height="238" width="577.99996" y="63.40003" x="55.40005" stroke="#000" fill="#fff"/>
+  <rect id="svg_4" height="184" width="157.99991" y="99.40002" x="448.40003" stroke="#000" fill="#fff"/>
+  <rect id="svg_5" height="178" width="163" y="97.40003" x="75.40002" stroke="#000" fill="#fff"/>
+  <rect id="svg_6" height="187" width="163" y="97.40002" x="75.40002" stroke="#000" fill="#fff"/>
+  <rect id="svg_7" height="184.99999" width="188" y="98.40003" x="248.40002" stroke="#000" fill="#fff"/>
+  <text xml:space="preserve" text-anchor="start" font-family="'sans-serif'" font-size="14" stroke-width="0" id="svg_9" y="23.40002" x="26.40002" stroke="#000" fill="#000000">layout.jsx</text>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="'Inter'" font-size="14" stroke-width="0" id="svg_11" y="54.40002" x="55.40002" stroke="#000" fill="#000000">innerLayout.jsx</text>
+  <text xml:space="preserve" text-anchor="start" font-family="'sans-serif'" font-size="14" stroke-width="0" id="svg_12" y="84.40002" x="77.40002" stroke="#000" fill="#000000">app.jsx</text>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="'Inter'" font-size="14" stroke-width="0" id="svg_13" y="121.40002" x="88.40002" stroke="#000" fill="#000000">index.jsx</text>
+  <text xml:space="preserve" text-anchor="start" font-family="'sans-serif'" font-size="14" stroke-width="0" id="svg_14" y="122.40002" x="262.40002" stroke="#000" fill="#000000">about.jsx</text>
+  <text xml:space="preserve" text-anchor="start" font-family="'sans-serif'" font-size="14" stroke-width="0" id="svg_15" y="124.40002" x="462.40002" stroke="#000" fill="#000000">error.jsx</text>
+ </g>
+</svg>

@@ -1,0 +1,51 @@
+<svg width="800" height="200" xmlns="http://www.w3.org/2000/svg" aria-label="Interactive chart" aria-hidden="false" version="1.1">
+ <defs>
+  <linearGradient id="gradient" gradientTransform="rotate(0)">
+   <stop offset="0%" stop-color="#f9b248" />
+   <stop offset="100%" stop-color="#f4863c" />
+  </linearGradient>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <g id="svg_2" aria-hidden="false" data-z-index="3">
+   <g id="svg_3" aria-label="Item 1, bar series 1 of 3 with 1 bar." tabindex="-1" role="region" height="317" width="630" aria-hidden="false" clip-path="url(#highcharts-1einrfw-219-)" transform="rotate(90, -1243.5, 1743) translate(640, 364) scale(-1, 1) scale(1)" data-z-index="0.1">
+    <rect id="svg_4" aria-label="x, 0, 943. Item 1." role="img" tabindex="-1" fill="#6f58e9" height="46" width="39" y="585" x="203"/>
+   </g>
+   <g id="svg_5" aria-hidden="true" clip-path="none" transform="rotate(90, 640, 364) translate(640, 364) scale(-1, 1) scale(1)" data-z-index="0.1"/>
+   <g id="svg_6" height="317" width="630" aria-label="Item 2, bar series 2 of 3 with 1 bar." tabindex="-1" role="region" aria-hidden="false" clip-path="url(#highcharts-1einrfw-219-)" transform="rotate(90, -1014.5, 1815.5) translate(640, 364) scale(-1, 1) scale(1)" data-z-index="0.1">
+    <rect id="svg_7" aria-label="x, 0, 1,709. Item 2." role="img" tabindex="-1" fill="#94d13d" height="83" width="39" y="548" x="139"/>
+   </g>
+   <g id="svg_8" aria-hidden="true" clip-path="none" transform="rotate(90, 640, 364) translate(640, 364) scale(-1, 1) scale(1)" data-z-index="0.1"/>
+   <g id="svg_9" height="317" width="630" aria-label="Item 3, bar series 3 of 3 with 1 bar." tabindex="-1" role="region" aria-hidden="false" clip-path="url(#highcharts-1einrfw-219-)" transform="rotate(90, -339.5, 1212.5) translate(640, 364) scale(-1, 1) scale(1)" data-z-index="0.1">
+    <rect id="svg_10" aria-label="x, 0, 11,745. Item 3." role="img" tabindex="-1" fill="rgb(0,0,0)" height="569" width="39" y="62" x="76"/>
+   </g>
+   <g id="svg_11" aria-hidden="true" clip-path="none" transform="rotate(90, 640, 364) translate(640, 364) scale(-1, 1) scale(1)" data-z-index="0.1"/>
+  </g>
+  <text id="svg_12" fill=" rgb(51, 51, 51)" font-size=" 18px" aria-hidden="true" y="25" data-z-index="4" text-anchor="middle" x="391" font-family="Roboto-Regular,Roboto">Build time comparison</text>
+  <g id="svg_13" aria-hidden="true" data-z-index="6">
+   <g id="svg_14" data-z-index="1">
+    <text id="svg_15" fill=" rgb(0, 0, 0)" font-weight=" bold" font-size=" 11px" y="66" data-z-index="1" x="217" font-family="Roboto-Regular,Roboto">0.9s</text>
+   </g>
+  </g>
+  <g id="svg_16" aria-hidden="true" data-z-index="6">
+   <g id="svg_17" data-z-index="1">
+    <text id="svg_18" fill=" rgb(0, 0, 0)" font-weight=" bold" font-size=" 11px" y="106" data-z-index="1" x="249" font-family="Roboto-Regular,Roboto">1.7s</text>
+   </g>
+  </g>
+  <g id="svg_19" aria-hidden="true" transform="translate(10, 47) scale(1)" data-z-index="6">
+   <g id="svg_20" data-z-index="1">
+    <text id="svg_21" fill=" rgb(0, 0, 0)" font-weight=" bold" font-size=" 11px" y="98" data-z-index="1" x="721" font-family="Roboto-Regular,Roboto">11.8s</text>
+   </g>
+  </g>
+  <g id="svg_22" aria-hidden="true" data-z-index="7">
+   <text id="svg_23" fill=" rgb(102, 102, 102)" font-size=" 11px" y="218" text-anchor="end" x="120" font-family="Roboto-Regular,Roboto"/>
+  </g>
+  <g id="svg_24" aria-hidden="true" data-z-index="7"/>
+  <rect rx="5" stroke-width="0" id="svg_39" height="29" width="49" y="48.39999" x="158" fill="url('#gradient')"/>
+  <rect rx="5" stroke-width="0" id="svg_41" height="29" width="81" y="87.39999" x="158" fill="url('#gradient')"/>
+  <rect rx="5" stroke-width="0" id="svg_42" height="29" width="563.00003" y="126.39999" x="159" fill="url('#gradient')"/>
+  <text xml:space="preserve" text-anchor="start" font-family="Roboto-Regular,Roboto" font-size=" 18px" stroke-width="0" id="svg_85" y="107.79999" x="22.39999" fill="#000000">Zuby.js + React</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Roboto-Regular,Roboto" font-size=" 18px" stroke-width="0" id="svg_86" y="146.79999" x="22.39999" fill="#000000">Next.js 14.1.0</text>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="Roboto-Regular,Roboto" font-size=" 18px" stroke-width="0" id="svg_87" y="68.79999" x="22.39999" fill="#000000">Zuby.js + Preact</text>
+ </g>
+</svg>

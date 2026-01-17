@@ -1,0 +1,83 @@
+---
+title: Install Zuby.js
+description: Learn how to create your first Zuby.js app
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Zuby.js is a simple framework for building JS apps that combines the best of the SPA and MPA worlds. The framework is designed to be simple and easy to use and supports both Preact and React.
+The following guide will help you to meet the Zuby.js framework and create your first app.
+
+## Integrations
+Zuby.js was built with Preact in mind, but it can be used with other frameworks.
+It integrates with JSX libraries through the `JsxProvider` interface. The following integrations are currently available:
+- [@zubyjs/preact](https://www.npmjs.com/package/@zubyjs/preact) - Preact integration for Zuby.js
+- [@zubyjs/react](https://www.npmjs.com/package/@zubyjs/react) - React integration for Zuby.js
+
+## Requirements
+Zuby.js requires below Node.js and NPM versions.
+If you don't have Node.js installed on your device,
+please see the [NVM guide](https://github.com/nvm-sh/nvm#installing-and-updating) how to install specific Node.js version on your device.
+
+- **Node.js** - 18.x or higher
+- **NPM** - 9.x or higher
+
+## 1. Installation
+You can set up new Zuby.js app easily with Zuby CLI wizard. 
+Just run the following command and follow the instructions:
+```bash
+npx zuby init
+```
+
+Once the installation is complete, 
+don't forget to enter the directory of your new app:
+```bash
+cd ./my-zuby-app
+```
+And install all required dependencies:
+<Tabs>
+    <TabItem label="NPM">
+        ```
+        npm install
+        ```
+    </TabItem>
+    <TabItem label="YARN">
+        ```
+        yarn install
+        ```
+    </TabItem>
+    <TabItem label="PNPM">
+        ```
+        pnpm install
+        ```
+    </TabItem>
+</Tabs>
+
+And that's it! 🎉
+
+## 2. Development mode
+To run your new example app in development mode, run the following command:
+```bash
+npx zuby dev
+```
+This command will start a local development server at `http://127.0.0.1:3000`. 
+Open this URL in your browser to see your new app.
+The key feature of development server is hot module reloading, 
+that allows you to see your changes in the browser immediately after saving the file.
+
+## 3. Production mode
+To build your new example app for production, run the following command:
+```bash
+npx zuby build
+```
+This command will generate a production optimized build in the `./build` directory.
+You can view the build locally by running:
+```bash
+npx zuby preview
+```
+This command will start a production server at `http://127.0.0.1:3000` 
+where you can preview your build.
+
+Congratulations! 🎉 You have successfully installed Zuby.js and created your first app.
+Now you can start building your own app or explore the framework by reading the documentation.
+Continue to next section to learn how to deploy your new app.
+

@@ -1,0 +1,177 @@
+---
+title: Caching
+description: Learn how to cache pages in Zuby.js
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The following guide will show you caching and revalidation techniques of pages and handlers in Zuby.js.
+The caching can be done in two ways:
+
+## Internal caching
+The internal caching is done by Zuby.js itself.
+It will cache any server-side rendered page or handler in the memory
+and serve the cached version to the user if the path is requested again
+
+The internal caching is disabled by default and can be enabled by setting the `cache` option to desired TTL (time to live) in seconds.
+In the following example, we will enable the internal caching for 60 seconds
+for both pages and handlers on given path.
+<Tabs>
+    <TabItem label="Javascript">
+    ```jsx title="pages/products/[id].js"
+    import fetchProduct from '../../api/fetchProduct.js';
+
+    export default async function Handler({ context }) {
+        const { id } = context.params;
+        const product = await fetchProduct(id);
+        context.props = {
+          product
+        };
+        context.cache = 60;
+    }
+
+    ```
+    ```jsx title="pages/products/[id].jsx"
+    export const prerender = false;
+    export default function Products({ product, context }) {
+        const { title, description, price } = product;
+        return (
+            <div>
+              <h1>{title}</h1>
+              <p>{description}</p>
+              <p>{price}</p>
+            </div>
+        );
+    }
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```tsx title="pages/products/[id].ts"
+    import type { PageContext } from 'zuby';
+    import fetchProduct from '../../api/fetchProduct.js';
+
+    export default function Handler(context: PageContext) {
+        const { id } = context.params;
+        const product = await fetchProduct(id);
+        context.props = {
+          product
+        };
+        context.cache = 60;
+    }
+
+    ```
+    ```tsx title="pages/products/[id].tsx"
+    import type { PageContext } from 'zuby';
+
+    interface Product {
+        title: string;
+        description: string;
+        price: number;
+    }
+
+    interface Props {
+        product: Product
+        context: PageContext;
+    }
+
+    export const prerender = false;
+    export default function Products({ product, context }: Props) {
+        const { title, description, price } = product;
+        return (
+            <div>
+              <h1>{title}</h1>
+              <p>{description}</p>
+              <p>{price}</p>
+            </div>
+        );
+    }
+    ```
+    </TabItem>
+</Tabs>
+:::note
+The path is used as a key for the cache and query parameters are ignored.
+:::
+
+With this technique you can implement ISR (Incremental Static Regeneration) in your application
+and generate static-like pages on the fly just when they are requested by setting the `cache` option to ridiculously high number.
+<Tabs>
+    <TabItem label="Javascript">
+    ```jsx title="pages/products/[id].js"
+    import fetchProduct from '../../api/fetchProduct.js';
+
+    export default async function Handler({ context }) {
+        const { id } = context.params;
+        const product = await fetchProduct(id);
+        context.props = {
+          product
+        };
+        // Cache page for 1 year
+        context.cache = 365 * 24 * 60 * 60;
+    }
+
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```tsx title="pages/products/[id].ts"
+    import type { PageContext } from 'zuby';
+    import fetchProduct from '../../api/fetchProduct.js';
+
+    export default function Handler(context: PageContext) {
+        const { id } = context.params;
+        const product = await fetchProduct(id);
+        context.props = {
+          product
+        };
+        // Cache page for 1 year
+        context.cache = 365 * 24 * 60 * 60;
+    }
+    ```
+    </TabItem>
+</Tabs>
+
+:::note
+The current caching implementation in Zuby.js keeps all the cached records in the memory
+for fast response times and will start to delete the old cache records if the memory usage is too high.
+Swapping the cache to disk is planned for the future versions.
+:::
+
+## External caching
+The external caching can be done by using the `Cache-Control` header
+together with external caching service like Cloudflare or Vercel Edge Network.
+
+The `Cache-Control` header can be set in the `context` object in the handler.
+The following example will instruct the CDN to cache the page for 1 hour
+and the client's web browser to cache the page for 5 minutes.
+<Tabs>
+    <TabItem label="Javascript">
+    ```jsx title="pages/products/[id].js"
+    import fetchProduct from '../../api/fetchProduct.js';
+
+    export default async function Handler({ context }) {
+        const { id } = context.params;
+        const product = await fetchProduct(id);
+        context.props = {
+          product
+        };
+        // Cache page for 1 hour by CDN and 5 minutes by web browser
+        context.headers.set('Cache-Control', 's-maxage=3600, max-age=300');
+    }
+
+    ```
+    </TabItem>
+    <TabItem label="Typescript">
+    ```tsx title="pages/products/[id].ts"
+    import type { PageContext } from 'zuby';
+    import fetchProduct from '../../api/fetchProduct.js';
+
+    export default function Handler(context: PageContext) {
+        const { id } = context.params;
+        const product = await fetchProduct(id);
+        context.props = {
+          product
+        };
+        // Cache page for 1 hour by CDN and 5 minutes by web browser
+        context.headers.set('Cache-Control', 's-maxage=3600, max-age=300');
+    }
+    ```
+    </TabItem>
+</Tabs>

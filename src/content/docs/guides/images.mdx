@@ -1,0 +1,191 @@
+---
+title: Images
+description: Learn how to work with images in Zuby.js
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Zuby.js provides a simple way to work with images.
+You can use the built-in `Image` component to display images in your app.
+
+## Image Component
+This component offers client-cache invalidation on new build, lazy loading, and more.
+It also integrates with the `@zubyjs/image` plugin to provide image optimization and transformation.
+Here's an example usage
+
+```diff lang="jsx" title="pages/index.jsx"
+  import Image from '@zubyjs/preact/image';
+
+  export default function Home() {
+    return (
+      <div>
+       <Image src="/path/to/image.jpg" alt="My image" />
+      </div>
+    );
+  }
+```
+
+:::note
+Upper example is showing usage with `@zubyjs/preact` JsxProvider. If you are using different one,
+please replace `@zubyjs/preact/image` with the correct package name.
+:::
+
+#### Props
+Image component accepts following props:
+
+- `src` - path to the image
+- `alt` - alt text for the image
+- `width` - width of the image
+- `height` - height of the image
+- `quality` - quality of the image (default: 80)
+- `format` - format of the image (default: webp)
+
+If no quality or format is provided,
+the default quality from `zuby.config.mjs` will be used.
+This can be changed globally by setting `image.defaultFormat` and `image.defaultQuality` in `zuby.config.mjs`.
+
+If no `width` and `height` are provided,
+the image will be rendered in its original size with max resolution 1920px.
+
+While resizing the image, the original aspect ratio is always preserved.
+The `Image` will try to load the src image with the nearest size to the provided `width` and `height`
+and then resize it to the exact size using CSS.
+
+## @zubyjs/image plugin
+By default, Zuby.js doesn't transform or optimize images
+and keeps the src of the image mostly unchaged.
+
+To integrate image optimization into your app,
+Zuby.js offers the `@zubyjs/image` plugin.
+It provides support for both build-time and runtime image optimization
+of your images and therefore works in both `static` and `server` output mode.
+
+### Runtime Image Optimization
+
+For runtime image optimization,
+the plugin will add new endpoint to your server at `/_image`.
+This endpoint accepts input in the following format:
+
+```
+/_image/${quality}/${width}/${height}/${src}.${format}
+```
+
+The format is used to find the optimized images in the `client` directory on filesystem
+and allows you to easily serve already optimized images from the CDN or custom web server.
+
+For example to optimize image on path `/images/dog.jpg`
+to 80% quality, 300px width, 200px height and output format webp
+you can use the following URL:
+
+```
+/_image/80/300/200/path/to/image.jpg.webp
+```
+
+To omit any of the parameters and use the default values
+or the original image values, you can use `auto` as the value.
+Example:
+
+```
+/_image/auto/300/200/path/to/image.jpg.webp
+```
+
+If the output format is same as the input format,
+you can leave the extension unchanged.
+Example:
+
+```
+/_image/auto/300/200/path/to/image.jpg
+```
+
+### Build-time Image Optimization
+
+During the build, the plugin will optimize all images on pre-rendered pages
+and put them into the `client/_image` directory.
+Those images won't be optimized again on runtime.
+
+If you're satisfied with the build-time optimization results,
+you can copy the `client/_image` directory to your public directory
+to skip the build-time optimization for those images in the future.
+
+The build-time optimization is very useful for static output mode
+and can save a lot of time and resources on the server.
+On the other hand, it can significantly increase your build time.
+
+If you want to disable the build-time optimization,
+you can set `buildTime` plugin option to `false`
+in your `zuby.config.mjs` or set maximum number of images to optimize
+using `maxBuildTime` option. The default value is 1000 images
+and the rest is optimized on-demand on runtime.
+
+```diff lang="js" title="zuby.config.mjs"
+  import { defineConfig } from 'zuby';
+  import preact from '@zubyjs/preact';
++ import image from '@zubyjs/image';
+
+  export default defineConfig({
+    outDir: '.zuby',
+    jsx: preact(),
+    plugins: [
+       image({
++           maxBuildTime: 100,
++           buildTime: true
+            ^^^^^^^^
+       })
+    ]
+  });
+```
+
+## Image Loader
+If you want to use external image optimization service
+instead of the `@zubyjs/image` plugin,
+you can provide your own `ImageLoader` function.
+
+The Image Loader is a function that receives image props
+and returns the url for the `Image` component.
+
+Here's and example:
+
+```diff lang="ts" title="src/customImageLoader.ts"
+import type { ImageLoader, ImageLoaderOptions } from 'zuby/types.js';
+
+export default function customImageLoader({
+    src,
+    width,
+    height,
+    quality,
+    format,
+    context
+}: ImageLoaderOptions) {
+    const { buildId } = context;
+    // Your custom image optimization service.
+    // Build id is used to invalidate the cache on new build.
+    return `${src}?w=${width}&h=${height}&q=${quality}&f=${format}&${buildId}`;
+}
+```
+
+:::note
+Keep in mind that the `ImageLoader` function is called on both the server and the client,
+so you cannot use any node.js specific modules or APIs.
+However, you can use the `context` object to access the `buildId`, `site` and
+other Zuby.js build-time variables and configuration on `GlobalContext`.
+:::
+
+
+Image Loader can be set in `zuby.config.ts`:
+```diff lang="ts" title="zuby.config.ts"
+  import { defineConfig } from 'zuby';
+  import preact from '@zubyjs/preact';
+  import image from '@zubyjs/image';
+
+  export default defineConfig({
+    outDir: '.zuby',
+    jsx: preact(),
+    plugins: [
+       image()
+    ],
++   image: {
++      loader: './src/customImageLoader.tsx',
++   },
+  });
+```
+
+See the [image](/reference/configuration#image) component configuration section for all available options.

@@ -1,0 +1,67 @@
+---
+title: Plugins
+description: Learn how to use plugins in Zuby.js
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Plugins are a way to extend the functionality of Zuby.js.
+They can be used to add new features, or modify existing ones.
+All plugins are installed by adding them to the [`plugins`](/reference/configuration#plugins) array
+in your `zuby.config.mjs` file.
+
+This page lists all the official plugins that are available for Zuby.js.
+If you're looking for guide how to create a custom plugin, see the [Zuby Plugin API](/reference/zuby-plugin) page.
+
+## Official plugins
+- [@zubyjs/sitemap](/guides/plugins#zubyjssitemap) - Automatically generates a sitemap for your site
+- [@zubyjs/share](/guides/plugins#zubyjsshare) - Allows you to share local development/prod server with anyone in the world
+- [@zubyjs/image](/guides/plugins#zubyjsimage) - Optimizes images in your Zuby.js app
+- [@zubyjs/tailwind](/guides/plugins#zubyjstailwind) - Offers seamless integration with Tailwind CSS
+- [@zubyjs/purgecss](/guides/plugins#zubyjspurgecss) - Automatically removes unused CSS from your Zuby.js build
+
+## Plugins
+### @zubyjs/sitemap
+The `@zubyjs/sitemap` plugin automatically generates a sitemap for your site.
+It will be generated at the root of your site, and will be named `sitemap.xml`.
+See it on [NPM](https://www.npmjs.com/package/@zubyjs/sitemap) to learn how to install and use it.
+
+### @zubyjs/share
+The `@zubyjs/share` plugin allows you to easily share your local development/prod
+server with anyone in the world using the Cloudflare [Quick Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/do-more-with-tunnels/trycloudflare/) service.
+This is useful when you want to show your work to someone else, or quickly test it on a different device.
+Once you stop the server, the tunnel is closed.
+
+Example output:
+
+```lang="sh"
+Zuby.js  v1.0.58  started in 379ms
+
+┃ Mode     development
+┃ Local    http://127.0.0.1:3000/
+┃ Network  use --host and --port to expose
+
+┃ Share    https://accidents-head-random.trycloudflare.com
+```
+
+See it on [NPM](https://www.npmjs.com/package/@zubyjs/share) to learn how to install and use it.
+
+### @zubyjs/image
+The plugin for Zuby.js that adds image optimization support to your project
+on top of the existing `<Image>` component.
+
+It supports both build-time and runtime optimizations
+and therefore works seamlessly with both static and server output modes.
+
+By default, it performs build-time optimizations for images
+on pre-rendered pages and runtime optimizations for images on server
+rendered pages.
+See it on [NPM](https://www.npmjs.com/package/@zubyjs/image) to learn how to install and use it.
+
+
+### @zubyjs/tailwind
+The `@zubyjs/tailwind` plugin offers seamless integration with Tailwind CSS
+to your application. See it on [NPM](https://www.npmjs.com/package/@zubyjs/tailwind) to learn how to install and use it.
+
+### @zubyjs/purgecss
+The `@zubyjs/purgecss` plugin analyzes your app and removes unused CSS from your Zuby.js build
+to make it smaller. See it on [NPM](https://www.npmjs.com/package/@zubyjs/purgecss) to learn how to install and use it.

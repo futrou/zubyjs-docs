@@ -1,0 +1,422 @@
+---
+title: Migration
+description: Learn how to migrate from other frameworks to Zuby.js
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+This guide will help you with the migration from other frameworks to Zuby.js
+and help you to better understand how Zuby.js works by comparing it to other
+frameworks and showing similarities and differences.
+
+## Next.js
+Zuby.js is inspired by Next.js and many of the used concepts are
+similar to provide a familiar developer experience. However, it still do things differently
+to solve some of the problems that Next.js has.
+
+Zuby.js right now has only equivalent for the `pages` directory in Next.js.
+The best way to understand the differences is by comparing the below examples:
+
+### getStaticProps
+In Next.js, you can use `getStaticProps` to fetch data at build time
+and pre-render the page. In Zuby.js,
+all the data fetching is done by handler functions that are executed for both SSG and SSR pages.
+The page page can be pre-rendered by setting the `prerender` property to `true` in the page component.
+
+Next.js example:
+```js title="pages/products.js"
+
+export const getStaticProps = (async (context) => {
+  const res = await fetch('https://api.my-example.com/products')
+  const products = await res.json()
+    return {
+        props: {
+                products
+            }
+        }
+    }
+)
+export default function Page({ products }) {
+  return (
+    <ul>
+      {products.map((product) => (
+        <li key={product.id}>{product.name}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+Zuby.js equivalent example:
+```js title="pages/products.js"
+
+export async function Handler({ context }) {
+  const res = await fetch('https://api.my-example.com/products')
+  const products = await res.json()
+  context.props = {
+    products
+  }
+}
+```
+```jsx title="pages/products.jsx"
+export const prerender = true;
+export default function Page({ products }) {
+  return (
+    <ul>
+      {products.map((product) => (
+        <li key={product.id}>{product.name}</li>
+      ))}
+    </ul>
+  )
+}
+```
+
+### getStaticPaths
+In Next.js, you need to use `getStaticPaths` and specify all the paths that
+should be pre-rendered if you want to use dynamic routes with `getStaticProps`.
+In Zuby.js, you can use the `prerenderPaths` property in the page component to specify
+the paths that should be pre-rendered or put them into global `prerenderPaths` config in the `zuby.config.js` file.
+
+Next.js example:
+```js title="pages/products/[id].js"
+
+export const getStaticProps = (async (context) => {
+    const res = await fetch(`https://api.my-example.com/products/${context.params.id}`)
+    const product = await res.json()
+    return {
+        props: {
+                product
+            }
+        }
+    }
+)
+
+export const getStaticPaths = () => {
+  return {
+    paths: [
+      { params: { id: '1' } },
+      { params: { id: '2' } },
+      { params: { id: '3' } },
+    ],
+    fallback: 'blocking'
+  }
+}
+
+export default function Page({ product }) {
+    const { name, description, price } = product;
+    return (
+        <div>
+            <h1>{name}</h1>
+            <p>{description}</p>
+            <p>{price}</p>
+        </div>
+    )
+}
+```
+
+Zuby.js equivalent example:
+```js title="pages/products/[id].js"
+
+export async function Handler({ context }) {
+    const res = await fetch(`https://api.my-example.com/products/${context.params.id}`)
+    const product = await res.json()
+    context.props = {
+        product
+    }
+}
+```
+```jsx title="pages/products/[id].jsx"
+export const prerender = true;
+export const prerenderPaths = [
+  { id: '1' }
+  { id: '2' }
+  { id: '3' }
+];
+export default function Page({ product }) {
+    const { name, description, price } = product;
+    return (
+        <div>
+            <h1>{name}</h1>
+            <p>{description}</p>
+            <p>{price}</p>
+        </div>
+    )
+}
+```
+
+In upper example, we use fallback `blocking` config in Next.js that means that the paths
+that are not pre-rendered will act as SSR pages. This is how Zuby.js works by default.
+
+The fallback `true` config in Next.js means that the paths that are not pre-rendered
+will be pre-rendered on the first request and then act as SSG pages.
+The fallback `true` behavior can be achieved in Zuby.js by setting the `cache` property in the handler function.
+See [Revalidation](#revalidation) section for more details.
+
+The fallback `false` config in Next.js means that the paths that are not pre-rendered
+will return 404 page. This option is not native in Zuby.js but can be achieved
+by returning 404 response in the handler function for the requests not made by the Zuby.js Renderer.
+
+### getServerSideProps
+In Next.js, you can use `getServerSideProps` to mark the page as SSR
+and always execute it on the server.
+In Zuby.js, the dynamic pages are always SSR
+by default and you can set the `prerender` property to `false` in the page component
+to disable pre-rendering for the given page or set output to `server` in the `zuby.config.js` file
+to disable pre-rendering for all pages by default.
+
+Next.js example:
+```js title="pages/products/[id].js"
+
+export const getServerSideProps = (async (context) => {
+    const res = await fetch(`https://api.my-example.com/products/${context.params.id}`)
+    const product = await res.json()
+    return {
+        props: {
+                product
+            }
+        }
+    }
+)
+
+export default function Page({ product }) {
+    const { name, description, price } = product;
+    return (
+        <div>
+            <h1>{name}</h1>
+            <p>{description}</p>
+            <p>{price}</p>
+        </div>
+    )
+}
+```
+
+Zuby.js equivalent example:
+```js title="pages/products/[id].js"
+
+export async function Handler({ context }) {
+    const res = await fetch(`https://api.my-example.com/products/${context.params.id}`)
+    const product = await res.json()
+    context.props = {
+        product
+    }
+}
+```
+```jsx title="pages/products/[id].jsx"
+export const prerender = false;
+export default function Page({ product }) {
+    const { name, description, price } = product;
+    return (
+        <div>
+            <h1>{name}</h1>
+            <p>{description}</p>
+            <p>{price}</p>
+        </div>
+    )
+}
+```
+
+### getInitialProps
+The `getInitialProps` is legacy API in Next.js that
+can be fully replaced by the `getStaticProps` and `getServerSideProps` Next.js APIs.
+See to upper examples for their equivalents in Zuby.js.
+
+### Revalidation
+In Next.js, you can use `revalidate` property in `getStaticProps` to specify
+the time in seconds after which the page should be revalidated and re-rendered.
+In Zuby.js, you can specify the `cache` property in the handler function
+to cache the page and handler response for the given time in seconds.
+
+Next.js example:
+```js title="pages/products.js"
+
+export const getStaticProps = (async (context) => {
+    const res = await fetch('https://api.my-example.com/products')
+    const products = await res.json()
+    return {
+        props: {
+            products
+        },
+        revalidate: 60
+    }
+)
+
+export default function Page({ products }) {
+    return (
+        <ul>
+            {products.map((product) => (
+                <li key={product.id}>{product.name}</li>
+            ))}
+        </ul>
+    )
+}
+```
+
+Zuby.js equivalent example:
+```js title="pages/products.js"
+
+export async function Handler({ context }) {
+    const res = await fetch('https://api.my-example.com/products')
+    const products = await res.json()
+    context.props = {
+        products
+    }
+    context.cache = 60;
+}
+```
+```jsx title="pages/products.jsx"
+export const prerender = false;
+export default function Page({ products }) {
+    return (
+        <ul>
+            {products.map((product) => (
+                <li key={product.id}>{product.name}</li>
+            ))}
+        </ul>
+    )
+}
+```
+
+### API Routes
+In Next.js, you can use `pages/api` directory to create API routes.
+In Zuby.js, you can create API routes using [Handlers](/guides/handlers) anywhere in the `pages` directory.
+
+Here's an example of the API route that is returning JSON response:
+
+Next.js example:
+```js title="pages/api/hello.js"
+
+export default function handler(req, res) {
+  res.status(200).json({ name: 'John Doe' })
+}
+```
+
+Zuby.js equivalent example with short syntax for JSON response:
+```js title="pages/api/hello.js"
+
+export async function Handler({ context }) {
+    context.statusCode = 200;
+    return { name: 'John Doe' };
+}
+```
+Zuby.js equivalent example with full syntax for generic response:
+```js title="pages/api/hello.js"
+
+export async function Handler({ context }) {
+    return new Response(JSON.stringify({ name: 'John Doe' }), {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+```
+
+
+Here's an example of the API route that is returning HTML response:
+
+Next.js example:
+```js title="pages/api/hello.js"
+export default function handler(req, res) {
+    res.status(200)
+    res.setHeader('Content-Type', 'text/html')
+    res.send('<h1>Hello World</h1>')
+}
+```
+
+Zuby.js equivalent example:
+```js title="pages/api/hello.js"
+
+export async function Handler({ context }) {
+    context.statusCode = 200;
+    context.headers = {
+        'Content-Type': 'text/html'
+    };
+    return '<h1>Hello World</h1>';
+}
+```
+
+### Middlewares
+In Next.js, you can create `middleware.js` file with `middleware` function
+that is executed before the pages and API routes.
+In Zuby.js, you can create [Handlers](/guides/handlers) in the `pages` directory
+that act as middlewares and are executed before the pages and other handlers.
+
+Here's an example of the middleware that blocks requests from the given IP address:
+
+Next.js example:
+```js title="middleware.js"
+import { NextResponse } from 'next/server'
+
+export function middleware(req) {
+    if (req.ip === '10.0.0.10') {
+        return NextResponse.next()
+    }
+    return NextResponse.redirect(new URL('/blocked', request.url))
+}
+
+export const config = {
+  matcher: '/products/:id',
+}
+```
+
+Zuby.js equivalent example:
+```js title="pages/products/[id].js"
+
+export async function Handler(context, next) {
+    if (context.clientAddress === '10.0.0.10'){
+        return next();
+    }
+    return new Response(null, {
+        status: 302,
+        headers: {
+            'Location': '/blocked'
+        }
+    });
+}
+```
+
+### _app.js
+In Next.js, you can create `pages/_app.js` to customize App component.
+In Zuby.js, you can create `pages/app.jsx` template to achieve the same result.
+See [app.jsx](/guides/pages#appjsx) guide for more details.
+
+### _document.js
+In Next.js, you can create `pages/_document.js` to customize page head, body and html layout.
+In Zuby.js, you can create `pages/layout.jsx` template to achieve the same result
+and even more. See [layout.jsx](/guides/pages#layoutjsx) guide for more details.
+
+### _error.js, 404.js, 500.js
+In Next.js, you can create `pages/_error.js`, `pages/404.js` and `pages/500.js` to customize error pages.
+In Zuby.js, you can create `pages/error.jsx` templates to achieve the same result.
+See [error.jsx](/guides/pages#errorjsx) guide for more details.
+
+### Bundler
+Next.js 14 still uses Webpack as a bundler for production builds that is very slow comparing it to
+other bundlerr that are available nowadays.
+Zuby.js uses modern [Vite](https://vitejs.dev/) bundler that is very fast.
+
+### Image Optimization
+Next.js has built-in image optimization that is using the `next/image` component.
+Zuby.js offers similar `Image` component.
+The image optimization is provided by the [@zubyjs/image](https://www.npmjs.com/package/@zubyjs/image) plugin.
+Unlike Next.js, Zuby.js image optimization works with both static and server output modes,
+so your app can be fully pre-rendered and still gain the benefits of image optimization.
+
+## Astro
+Zuby.js is also heavily inspired by Astro and its concepts.
+The main difference is that Zuby.js is acting as SPA (Single Page Application) after the initial page load
+and Astro is acting as MPA (Multi Page Application).
+
+This has some advantages and disadvantages. The main advantage is that
+Zuby.js can preserve the app context and state between the pages.
+
+Another difference is that Astro follows the Island Architecture pattern that can make sharing the state between
+the components more difficult than in SPA apps such as Zuby.js or Next.js.
+
+Due to these differences is very hard and nearly impossible to migrate from Astro to Zuby.js
+without significant changes in the codebase.
+
+Zuby.js is here as an familiar alternative to Astro for those who want to build SPA apps.
+If you want to build MPA apps or use multiple JSX libraries at the same time, Astro is the right choice for you.
+
+### Bundler
+Both Zuby.js and Astro use [Vite](https://vitejs.dev/) as a bundler for production builds.
