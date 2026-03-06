@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://zubyjs.com/sitemap-index.xml
+Sitemap: https://zuby.futrou.com/sitemap-index.xml
